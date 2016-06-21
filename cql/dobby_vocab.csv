@@ -1,0 +1,17 @@
+dobby,topic,reset,#reset
+dobby,topic,vocab,#vocab
+dobby,topic,topic,#topic
+dobby,topic,topic,#topics
+dobby,topic,intent,#intent
+dobby,topic,intent,#intents
+dobby,topic,input,#input
+dobby,topic,input,#inputs
+dobby,topic,logic,#logic
+dobby,intent,create,#when
+dobby,intent,show,#show
+dobby,input,learn,#learn
+dobby,input,forget,#forget
+dobby,input,list,#list
+dobby,input,add,#add
+dobby,input,help,#info
+dobby,input,help,#help
