@@ -10,8 +10,11 @@ A bot engine platform to build conversational bots on top of Cisco Spark Message
  1. [Pick a relay channel](#relay_channel)
  1. [Register a webhook](#register_webhook)
 1. [Usage](#usage)
+ 1. [Invocation](#invocation)
+ 1. [Conversation](#conversation)
+ 1. [Training](#training)
 
-## <a name="whats_new></a<What's New
+## <a name="whats_new"></a>What's New
 This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model using `Gradient Scale` method as described here (TBD). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any conversation training for the bot should be using conversation methods only, and should not require writing any code.
 
 ## <a name="pre_req"></a>Pre-requisites
@@ -25,6 +28,7 @@ Following are required for this application to be used:
  * You can use a pre-existing cassandra node/cluster if already available, or download and install from above link for local laptop/lab-server
 
 ## <a name="deployment"></a>Installation and Deployment
+To use this application, you'll need to install and deploy the bot engine platform on either a laptop or lab machine with node.js installed, and access to cassandra server either locally or on the network.
 
 1. clone the repo `git clone git@github.com:dobby-spark/dobby-core.git` on a machine where you want to run the application
 1. install node.js dependencies: `cd dobby-core; npm install`
@@ -55,10 +59,27 @@ Use the Cisco Spark Developer portal to register a webhook for your bot's channe
 
 ## <a name="setup"></a>Usage
 
+### <a name="invocation"></a>Invocation
+Start the bot engine platform on your laptop or server, where you [deployed as above](#deployment).
 1. (optional) export any proxy settings if applicable: `export HTTP_PROXY=<your corporate proxy server>`
 1. start the bot engine `node dobby.js <channel-name> <spark-token>` : here `<channel-name>` is the name of the channel [you picked](#relay_channel) above, and `<spark-token>` is the access token you obtained in [register bot](#register_bot) step above.
-1. send a message to your bot from the spark client on the room where bot was added and start training your bot (below example has a simple training transcript)
 
+You should expect to see a message from your bot like below:
+```
+$ node dobby.js <channel-name> <access-token>
+my identity:  { name: 'Mr. Dobby Spark',
+  id: 'Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zODY0Y2ZhMS02YzkzLTQ1YjktOTU1OS1mN2NkODZmMWQ1ZTE',
+  email: 'dobby.spark@gmail.com' }
+Chatbot: Mr. Dobby Spark listening on channel: <channel-name>
+```
+
+> if you want to keep bot running on a lab server for continous use, you may want to use: `nohup node dobby.js <channel> <token> &`
+
+### <a name="conversation"></a>Conversation
+You'll converse with your bot started above using spark client, by sending a message to your bot from the room where bot was [added as above](#invite_bot).
+
+### <a name="training"></a>Training
+Initial setup creates a bot with no training data, and you'll need to train your bot for conversation. Below example has a simple training transcript. For more details refer to wiki (TBD).
 ```
 You 10:00 PM
 hi
@@ -85,5 +106,3 @@ hi
 Mr. Dobby Spark(@gmail.com) 10:00 PM
 hello!
 ```
-
-> initial setup creates a bot with no training data, and you'll need to train your bot for conversation.
