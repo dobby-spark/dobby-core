@@ -40,8 +40,9 @@ To use this application, you'll need to install and deploy the bot engine platfo
 
 ### <a name="register_bot"></a>1. Register Bot
 It is advisable that you use a new/unique account for your bot, that it can be easily invited to different rooms for participation.
+
 1. register a new/unique Cisco Spark account
-1. log on [developer.ciscospark.com] to obtain token for your bot's account
+1. log on [https://developer.ciscospark.com] to obtain token for your bot's account
  
 ### <a name="invite_bot"></a>2. Invite Bot to a room
 Create a new Spark conversation using your own spark account and invite the bot's account to that room.
@@ -61,6 +62,7 @@ Use the Cisco Spark Developer portal to register a webhook for your bot's channe
 
 ### <a name="invocation"></a>Invocation
 Start the bot engine platform on your laptop or server, where you [deployed as above](#deployment).
+
 1. (optional) export any proxy settings if applicable: `export HTTP_PROXY=<your corporate proxy server>`
 1. start the bot engine `node dobby.js <channel-name> <spark-token>` : here `<channel-name>` is the name of the channel [you picked](#relay_channel) above, and `<spark-token>` is the access token you obtained in [register bot](#register_bot) step above.
 
@@ -73,7 +75,8 @@ my identity:  { name: 'Mr. Dobby Spark',
 Chatbot: Mr. Dobby Spark listening on channel: <channel-name>
 ```
 
-> if you want to keep bot running on a lab server for continous use, you may want to use: `nohup node dobby.js <channel> <token> &`
+> if you want to keep bot running on a lab server for continous use, you may want to use:  
+`nohup node dobby.js <channel> <token> &`
 
 ### <a name="conversation"></a>Conversation
 You'll converse with your bot started above using spark client, by sending a message to your bot from the room where bot was [added as above](#invite_bot).
