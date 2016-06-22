@@ -1,18 +1,20 @@
 111,1,1,1,1,,,please configure your bot using #dobby commands
 dobby,1,1,1,1,,,"type \"#dobby #help\" for list of commands"
-dobby,1,1,1,help,,,"syntax: '#dobby <command>', where <command> is #vocab | #reset | #topic | #intent | #input | #logic"
+dobby,1,1,1,help,,,"syntax: #dobby <command> [#help] (where <command> is #learn | #reset | #list)"
 dobby,reset,1,1,1,#execute,,
-dobby,vocab,1,1,1,#execute,,
-dobby,logic,create,1,1,#execute,create,
-dobby,logic,create,1,help,,,"syntax: '#dobby #logic #when [ topic is <topic> and] [intent is <intent>] [and state is <state>] [and input is <input>] then [transition to [intent][/<state>] and] [say <phrase>]'"
-dobby,logic,show,1,1,#execute,show,
-dobby,logic,show,1,help,,,"syntax: '#dobby #logic #show' to get a list of existing logic"
-dobby,logic,1,1,1,,,"syntax: '#dobby #logic #when | #show ', to create new logic or show existing logic"
-dobby,reset,1,1,help,,,"syntax: '#dobby #reset', to reset/end an active conversation"
-dobby,vocab,1,1,help,,,"syntax: '#dobby #vocab #learn | #forget that <alias> is <input>', where <alias> is the word you want to be learned | forget as <input>"
-dobby,topic,1,1,1,#execute,,
-dobby,topic,1,1,help,,,"syntax: '#dobby #add <new-type> to #topic', where type is the new topic to add"
-dobby,intent,1,1,1,#execute,,
-dobby,intent,1,1,help,,,"syntax: '#dobby #add <new-type> to #intent', where type is the new intent to add"
-dobby,input,1,1,1,#execute,,
-dobby,input,1,1,help,,,"syntax: '#dobby #add <new-type> to #input', where type is the new input to add"
+dobby,reset,1,1,help,,,"syntax: #dobby #reset (execute any time to reset/end a conversation)"
+dobby,learn,1,1,help,,,"syntax: #dobby #learn #when [ topic is <topic> and] [intent is <intent>] [and state is <state>] [and input is <input>] then [transition to [intent <intent>] [and state <state>] and] [say <phrase>]"
+dobby,learn,when,1,1,#execute,,
+dobby,learn,when,1,help,,,"trains dobby for a conversation exchange"
+dobby,learn,alias,1,1,#execute,,
+dobby,learn,alias,1,help,,,"syntax: #dobby #learn <alias> is #alias for <keyword> (trains dobby to learn a new alias for an input keyword>"
+dobby,list,1,1,help,,,"syntax: #dobby #list <type> (where <type> is #logic | #topic | #intent | #input | #alias"
+dobby,list,logic,1,1,#execute,,
+dobby,list,logic,1,help,,,"syntax: #dobby #list #losic (lists all training data logic populated currently)"
+dobby,list,topic,1,1,#execute,,
+dobby,list,topic,1,help,,,"syntax: #dobby #list #topic (lists all key words registered to parse a topic from a message)"
+dobby,list,intent,1,1,#execute,,
+dobby,list,intent,1,help,,,"syntax: #dobby #list #intent (lists all key words registered to parse an intent from a message)"
+dobby,list,input,1,1,#execute,,
+dobby,list,input,1,help,,,"syntax: #dobby #list #input (lists all key words registered to parse an input from a message)"
+dobby,list,alias,1,1,#execute,,
