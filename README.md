@@ -1,6 +1,7 @@
-# Dobby
+# Dobby (Version 0.1)
 A bot engine platform to build conversational bots on top of Cisco Spark Message platform.
 
+1. [What's New](#whats_new)
 1. [Pre-Requisites](#pre_req)
 1. [Installation and Deployment](#deployment)
 1. [Setup](#setup)
@@ -9,6 +10,9 @@ A bot engine platform to build conversational bots on top of Cisco Spark Message
  1. [Pick a relay channel](#relay_channel)
  1. [Register a webhook](#register_webhook)
 1. [Usage](#usage)
+
+## <a name="whats_new></a<What's New
+This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model using `Gradient Scale` method as described here (TBD). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any conversation training for the bot should be using conversation methods only, and should not require writing any code.
 
 ## <a name="pre_req"></a>Pre-requisites
 Following are required for this application to be used:
@@ -23,16 +27,17 @@ Following are required for this application to be used:
 ## <a name="deployment"></a>Installation and Deployment
 
 1. clone the repo `git clone git@github.com:dobby-spark/dobby-core.git` on a machine where you want to run the application
-2. setup environment variable *CONTACT_POINTS* to point to your cassandra host, e.g. `export CONTACT_POINTS=localhost`
-3. (optional) setup environment variable *CONTACT_PORT* to point to your cassandra port, e.g. `export CONTACT_PORT=9042`
-4. run setup `cd dobby-core; ./setup.sh`
+1. install node.js dependencies: `cd dobby-core; npm install`
+1. setup environment variable *CONTACT_POINTS* to point to your cassandra host, e.g. `export CONTACT_POINTS=localhost`
+1. (optional) setup environment variable *CONTACT_PORT* to point to your cassandra port, e.g. `export CONTACT_PORT=9042`
+1. create and populate cassandra DB by runnin setup: `./setup.sh`
 
 ## <a name="setup"></a>Setup
 
 ### <a name="register_bot"></a>1. Register Bot
 It is advisable that you use a new/unique account for your bot, that it can be easily invited to different rooms for participation.
 1. register a new/unique Cisco Spark account
-2. log on [developer.ciscospark.com] to obtain token for your bot's account
+1. log on [developer.ciscospark.com] to obtain token for your bot's account
  
 ### <a name="invite_bot"></a>2. Invite Bot to a room
 Create a new Spark conversation using your own spark account and invite the bot's account to that room.
@@ -50,5 +55,35 @@ Use the Cisco Spark Developer portal to register a webhook for your bot's channe
 
 ## <a name="setup"></a>Usage
 
+1. (optional) export any proxy settings if applicable: `export HTTP_PROXY=<your corporate proxy server>`
 1. start the bot engine `node dobby.js <channel-name> <spark-token>` : here `<channel-name>` is the name of the channel [you picked](#relay_channel) above, and `<spark-token>` is the access token you obtained in [register bot](#register_bot) step above.
-2. start training your bot as mentioned in example below.
+1. send a message to your bot from the spark client on the room where bot was added and start training your bot (below example has a simple training transcript)
+
+```
+You 10:00 PM
+hi
+
+Mr. Dobby Spark(@gmail.com) 10:00 PM
+please configure your bot using #dobby commands
+
+You 10:00 PM
+#dobby #help #logic #when
+
+Mr. Dobby Spark(@gmail.com) 10:00 PM
+syntax: '#dobby #logic #when [ topic is <topic> and] [intent is <intent>] [and state is <state>] [and input is <input>] then [transition to [intent][/<state>] and] [say <phrase>]'
+
+You 10:00 PM
+#dobby #logic #when input is hi then say hello!
+
+Mr. Dobby Spark(@gmail.com) 10:00 PM
+dobby added new key hi for type input
+created: {"topic":"1","intent":"1","state":"1","input":"hi"} ==> {"say":"hello!"}
+
+You 10:00 PM
+hi
+
+Mr. Dobby Spark(@gmail.com) 10:00 PM
+hello!
+```
+
+> initial setup creates a bot with no training data, and you'll need to train your bot for conversation.
