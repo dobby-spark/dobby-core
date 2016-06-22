@@ -15,7 +15,7 @@ A bot engine platform to build conversational bots on top of Cisco Spark Message
  1. [Training](#training)
 
 ## <a name="whats_new"></a>What's New
-This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model using `Gradient Scale` method as described here (TBD). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any conversation training for the bot should be using conversation methods only, and should not require writing any code.
+This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model we have developed to create bots that can engage in a conversation exchange on different topics with varying degree of context and depth. More details about this training model are described here (TBD). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any conversation training for the bot should be using conversation methods only, and should not require writing any code.
 
 ## <a name="pre_req"></a>Pre-requisites
 Following are required for this application to be used:
