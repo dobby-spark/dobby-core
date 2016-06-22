@@ -16,8 +16,12 @@ module.exports = {
   deleteFromVocab: deleteFromVocab,
 };
 
-//const cassClient = new cassandra.Client({ contactPoints: ['ucm211.cisco.com'], keyspace: 'amit' });
-const cassClient = new cassandra.Client({ contactPoints: ['localhost'], keyspace: 'dobby', username: 'cassandra', password: 'cassandra' });
+if (!process.env.CONTACT_POINTS) {
+  console.log('cassandra CONTACT_POONTS not defined in environment');
+  process.exit(1);
+}
+
+const cassClient = new cassandra.Client({ contactPoints: [process.env.CONTACT_POINTS], keyspace: 'dobby'});
 getVocabInputs
 function getVocabInputs(botId, cb) {
   var query = "SELECT name, value FROM botvocab WHERE botid=? and type in ('input', 'intent', 'topic')";

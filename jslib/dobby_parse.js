@@ -43,7 +43,7 @@ function addToType(botId, type, name, cb) {
       // add new type name to bot's vocab input
       dobby_cass.addToVocab(botId, type, name, name, (err, res) => {
         if (!err) {
-          cb('dobby added new key' + name + ' for type ' + type);
+          cb("dobby added new key '" + name + "' for type " + type);
         } else {
           cb('dobby failed to add new ' + name);
         }
