@@ -241,13 +241,15 @@ const actions = {
       if (next.n_intent) {
         // sessions[sessionId].context.intent = next.n_intent;
         // sessions[sessionId].context.state = next.n_state;
-        context.intent = next.n_intent;
-        context.state = next.n_state;
         // special handling of command intents
         if (next.n_intent == '#execute') {
+          // context.intent = next.n_intent;
+          context.state = next.n_state;
           dobby_bot.runCommand(sessions[sessionId].context.botId, actions, sessionId, context, cb);
         } else {
           // actions.nextState(sessions[sessionId].context.botId, sessionId, actions, context, cb);
+          context.intent = next.n_intent;
+          context.state = next.n_state;
           actions.nextState(sessionId, context, cb);
         }
         return;

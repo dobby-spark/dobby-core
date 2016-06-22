@@ -10,35 +10,26 @@ module.exports = {
 
 function runCommand(botId, actions, sessionId, context, cb) {
     console.log("running cmd:", context);
-    if (context.topic == 'vocab') {
-		// delegate vocab command to parser
-        parser.vocabCommand(botId, context, (res) => {
+    if (context.topic == 'learn') {
+		    // delegate learning command to parser
+        parser.learn(botId, context, (res) => {
         	actions.say(sessionId, context, res, () => {
-        		// actions.clean(sessionId, context, (ctx) => {});
         	})
         });
-    } else if (['topic','intent','input'].indexOf(context.topic) > -1) {
-      	// delegate type modification commands to parser
-        parser.typeCommand(botId, context, (res) => {
-        	actions.say(sessionId, context, res, () => {
-        		// actions.clean(sessionId, context, (ctx) => {});
-        	})
-        });
-    } else if (context.topic == 'logic') {
-      	// delegate logic creation to parser
-        parser.logicCommand(botId, context, (res) => {
-        	actions.say(sessionId, context, res, () => {
-        		// actions.clean(sessionId, context, (ctx) => {});
-        	})
+    } else if (context.topic == 'list') {
+        // delegate list command to parser
+        parser.list(botId, context, (res) => {
+          actions.say(sessionId, context, res, () => {
+          })
         });
     } else if (context.topic == 'reset') {
-      	// reset current conversation
+      // reset current conversation
       actions.say(sessionId, context, "*poof*", () => {
-	      actions.clean(sessionId, context, cb);
+        actions.clean(sessionId, context, cb);
       });
     } else {
       actions.say(sessionId, context, "dobby do not understand command type " + context.topic, () => {
-	      // actions.clean(sessionId, context, cb);
+	    // actions.clean(sessionId, context, cb);
       });
     }
 }

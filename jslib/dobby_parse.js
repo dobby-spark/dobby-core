@@ -4,9 +4,8 @@ const dobby_cass = require('./dobby_cass');
 
 module.exports = {
   parseMessage: parseMessage,
-  vocabCommand: vocabCommand,
-  typeCommand: typeCommand,
-  logicCommand: logicCommand,
+  learn: learn,
+  list: list,
 };
 
 // TYPES of vocab
@@ -351,5 +350,170 @@ function vocabCommand(botId, context, cb) {
     }
   } else {
     cb('dobby do not understand command "' + context.message.replace('#dobby ', '') + '"');
+  }
+}
+
+function listTypeKeys(botId, type, cb) {
+  dobby_cass.getVocabTypes(botId, type, (err, res) => {
+    if (err) {
+      console.log('vocab types read error', err);
+      cb('sorry, dobby cannot find keys for: ' + type);
+    } else {
+      cb("registered keys of type " + type + ":\n" + JSON.stringify(res.rows));
+    }
+  });
+}
+
+function listVocab(botId, cb) {
+  dobby_cass.getVocabInputs(botId, (err, res) => {
+    if (err) {
+      console.log('vocab types read error', err);
+      cb('sorry, dobby cannot find vocab!');
+    } else {
+      cb("registered aliases:\n" + JSON.stringify(res.rows));
+    }
+  });  
+}
+
+function listLogic(botId, cb) {
+  dobby_cass.getBotLogic(botId, (err, res) => {
+    if (err) {
+      cb("failed to create transition in DB");
+    } else {
+      var states = "bot logic is:\n";
+      res && res.rows.length && res.rows.forEach((row) => {
+        states = states + 'when topic is ' + row.topic + 
+          ' and intent is ' + row.intent +
+          ' and state is ' + row.state + 
+          ' and input is ' + row.input + ' ==> ' +
+          'next intent/state ' + row.n_intent + '/' + row.n_state +
+          ' and say "' + row.o_msg + '"\n';
+        });
+      cb(states);
+    }
+  });
+}
+
+function list(botId, context, cb) {
+  // syntax: #dobby #list <type>
+  var types = context.message.toLowerCase().replace(/#/g, '').replace('dobby ', '').replace('list ', '').split(' ');
+  var atLeastOne = false;
+  types.forEach((type) => {
+    if (type == 'logic') {
+      atLeastOne = true;
+      listLogic(botId, cb);
+    } else if (type == 'alias') {
+      atLeastOne = true;
+      listVocab(botId, cb);
+    } else if (vocabTypes.indexOf(type) > -1) {
+      atLeastOne = true;
+      listTypeKeys(botId, type, cb);
+    }
+  });
+  if (!atLeastOne) {
+    cb ('dobby do not understand, please use "#dobby #help #list" for syntax')
+  }
+}
+
+const learnLogicCmdConditionsRe = /(topic|intent|state|input)\sis\s(\S+)/g;
+const learnLogicCmdOutputNextRe = /(intent|state)\s((is|as)\s)?(\S+)/g;
+const learnLogicCmdOutputMsgRe = /say\s(.)+/;
+function learnLogic(botId, context, cb) {
+  // syntax: #dobby #learn #when
+  //  topic is <topic> and
+  //  intent is <intent> and
+  //  state is <state> and
+  //  input is <input>
+  //  then
+  //  transition to
+  //  next intent <intent> and
+  //  next state <state> and
+  //  say <phrase>
+  var args = context.message.replace(/#/g, '').replace('dobby', '').replace('learn ', '').replace('when ', '').replace('transition to','').replace('next ','').split(' then ');
+  if (args.length != 2) {
+    cb('command syntax not correct, please refer to #dobby #help #learn');
+  } else {
+    var conditions = args[0].split(' and ');
+    var actions = args[1].split(' and ');
+
+    // parse input conditions
+    var input = {
+      topic: '1',
+      intent: '1',
+      state: '1',
+      input: '1',
+    };
+    var isValid = true;
+    conditions.forEach((condition) => {
+      if (condition.indexOf('topic ') > -1) {
+        // this is a topic condition
+        console.log('adding condition:', condition);
+        input.topic = condition.split(' is ')[1];
+      } else if (condition.indexOf('intent ') > -1) {
+        // this is an intent condition
+        console.log('adding condition:', condition);
+        input.intent = condition.split(' is ')[1];
+      } else if (condition.indexOf('state ') > -1) {
+        // this is current state condition
+        console.log('adding condition:', condition);
+        input.state = condition.split(' is ')[1];
+      } else if (condition.indexOf('input ') > -1) {
+        // this is an specified input condition
+        console.log('adding condition:', condition);
+        input.input = condition.split(' is ')[1];
+      } else {
+        isValid = false;
+        console.log('unsupported condition:', condition);
+        cb('incorrect condition: ' + condition);
+      }
+    });
+
+    // parse output actions
+    var output = {};
+    actions.forEach((action) => {
+      var next = action.match(learnLogicCmdOutputNextRe);
+      var msg = action.match(learnLogicCmdOutputMsgRe);
+      if (next) {
+        console.log('adding transition action:', next);
+        var transition = next[0].replace(/\s(is|as)/, '').split(' ');
+        (transition.length == 2) && (output[transition[0].trim().toLowerCase()] =  transition[1].trim().toLowerCase());
+      } else if (msg) {
+        // this is an intent condition
+        console.log('adding output message:', msg);
+        output.say = msg[0].replace('say ', '');
+      } else {
+        isValid = false;
+        console.log('unsupported action:', action);
+        cb('incorrect action: ' + action);
+      }
+    });
+
+    if (!isValid) {
+      cb('failed to process command');
+    } else {
+      createLogic(botId, input, output, context, cb);
+    }
+  }
+}
+
+// syntax: #dobby #learn <alias> is #alias for <keyword>
+const aliasCmdRe = /\s(\S+)\sis\s#alias\s(for|of)\s(\S+)/;
+function learnAlias(botId, context, cb) {
+    var input = context.message.split(aliasCmdRe);
+    console.log("learning alias input:", input);
+    if (input[1] && input[3]) {
+      addToVocab(botId, input[3].trim().toLowerCase(), input[1].trim().toLowerCase(), 0, false, cb);
+    } else {
+      cb('dobby do not understand, please use "#dobby #help #learn #alias" for syntax');
+    }
+}
+
+function learn(botId, context, cb) {
+  if (context.intent == 'alias') {
+    learnAlias(botId, context, cb);
+  } else if (context.intent == 'when') {
+    learnLogic(botId, context, cb);
+  } else {
+    cb ('dobby do not understand, please use "#dobby #help #learn" for syntax')
   }
 }
