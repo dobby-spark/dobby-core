@@ -16,6 +16,12 @@ function runCommand(botId, actions, sessionId, context, cb) {
         	actions.say(sessionId, context, res, () => {
         	})
         });
+    } else if (context.topic == 'forget') {
+        // delegate list command to parser
+        parser.forget(botId, context, (res) => {
+          actions.say(sessionId, context, res, () => {
+          })
+        });
     } else if (context.topic == 'list') {
         // delegate list command to parser
         parser.list(botId, context, (res) => {

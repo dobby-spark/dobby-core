@@ -6,6 +6,7 @@ module.exports = {
   getState: getState,
   getBotLogic: getBotLogic,
   createLogic: createLogic,
+  deleteLogic: deleteLogic,
   getVocab: getVocab,
   getVocabTypes: getVocabTypes,
   getVocabInputs: getVocabInputs,
@@ -68,6 +69,12 @@ function deleteFromVocab(botId, type, name, value, cb) {
 function createLogic(botId, input, output, cb) {
   var query = 'INSERT INTO state_mc (botid, topic , intent , state , input , n_intent , n_state , o_msg ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
   var params = [botId, input.topic, input.intent, input.state, input.input, output.intent, output.state, output.say];
+  cassClient.execute(query, params, cb);  
+}
+
+function deleteLogic(botId, input, cb) {
+  var query = 'DELETE FROM state_mc WHERE botid = ? AND topic = ? AND intent = ? AND state = ? AND input = ?;';
+  var params = [botId, input.topic, input.intent, input.state, input.input];
   cassClient.execute(query, params, cb);  
 }
 

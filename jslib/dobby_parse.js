@@ -6,6 +6,7 @@ module.exports = {
   parseMessage: parseMessage,
   learn: learn,
   list: list,
+  forget: forget,
 };
 
 // TYPES of vocab
@@ -177,6 +178,16 @@ function createLogic(botId, input, output, context, cb) {
         });
       });
       cb('created: ' + JSON.stringify(input) + ' ==> ' + JSON.stringify(output));
+    }
+  });
+}
+
+function deleteLogic(botId, input, context, cb) {
+  dobby_cass.deleteLogic(botId, input, (err, res) => {
+    if (err) {
+      cb("failed to delete transition in DB");
+    } else {
+      cb('forgot: ' + JSON.stringify(input));
     }
   });
 }
@@ -496,6 +507,56 @@ function learnLogic(botId, context, cb) {
   }
 }
 
+function forgetLogic(botId, context, cb) {
+  // syntax: #dobby #forget #when
+  //  topic is <topic> and
+  //  intent is <intent> and
+  //  state is <state> and
+  //  input is <input>
+  var conditions = context.message.replace(/#/g, '').replace('dobby', '').replace('forget ', '').replace('when ', '').split(' and ');
+
+  // parse input conditions
+  var input = {
+    topic: '1',
+    intent: '1',
+    state: '1',
+    input: '1',
+  };
+  var isValid = false;
+  conditions.forEach((condition) => {
+    if (condition.indexOf('topic ') > -1) {
+      // this is a topic condition
+      isValid = true;
+      console.log('adding condition:', condition);
+      input.topic = condition.split(' is ')[1].toLowerCase();
+    } else if (condition.indexOf('intent ') > -1) {
+      // this is an intent condition
+      isValid = true;
+      console.log('adding condition:', condition);
+      input.intent = condition.split(' is ')[1].toLowerCase();
+    } else if (condition.indexOf('state ') > -1) {
+      // this is current state condition
+      isValid = true;
+      console.log('adding condition:', condition);
+      input.state = condition.split(' is ')[1].toLowerCase();
+    } else if (condition.indexOf('input ') > -1) {
+      // this is an specified input condition
+      isValid = true;
+      console.log('adding condition:', condition);
+      input.input = condition.split(' is ')[1].toLowerCase();
+    } else {
+      console.log('unsupported condition:', condition);
+      cb('incorrect condition: ' + condition);
+    }
+  });
+
+  if (!isValid) {
+    cb('failed to process command');
+  } else {
+    deleteLogic(botId, input, context, cb);
+  }
+}
+
 // syntax: #dobby #learn <alias> is #alias for <keyword>
 const aliasCmdRe = /\s(\S+)\sis\s#alias\s(for|of)\s(\S+)/;
 function learnAlias(botId, context, cb) {
@@ -515,5 +576,13 @@ function learn(botId, context, cb) {
     learnLogic(botId, context, cb);
   } else {
     cb ('dobby do not understand, please use "#dobby #help #learn" for syntax')
+  }
+}
+
+function forget(botId, context, cb) {
+  if (context.intent == 'when') {
+    forgetLogic(botId, context, cb);
+  } else {
+    cb ('dobby do not understand, please use "#dobby #help #forget" for syntax')
   }
 }

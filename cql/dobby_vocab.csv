@@ -1,5 +1,6 @@
 dobby,topic,reset,#reset
 dobby,topic,learn,#learn
+dobby,topic,forget,#forget
 dobby,topic,list,#list
 dobby,intent,when,#when
 dobby,intent,alias,#alias
