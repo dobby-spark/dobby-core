@@ -15,7 +15,7 @@ A bot engine platform to build conversational bots on top of Cisco Spark Message
  1. [Training](#training)
 
 ## <a name="whats_new"></a>What's New
-This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model we have developed to create bots that can engage in a conversation exchange on different topics with varying degree of context and depth. More details about this training model are described here (TBD). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any conversation training for the bot should be using conversation methods only, and should not require writing any code.
+This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model we have developed to create bots that can engage in a conversation exchange on different topics with varying degree of context and depth. More details about this training model are described [here](https://github.com/dobby-spark/dobby-core/wiki/Gradient-Scale-Model). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any training for the bot should be using conversation methods only, and should not require writing any code or web UI. Eventually we want the bot to be trained using natural language interfaces, e.g. Alexia or Google APIs.
 
 ## <a name="pre_req"></a>Pre-requisites
 Following are required for this application to be used:
@@ -82,7 +82,7 @@ Chatbot: Mr. Dobby Spark listening on channel: <channel-name>
 You'll converse with your bot started above using spark client, by sending a message to your bot from the room where bot was [added as above](#invite_bot).
 
 ### <a name="training"></a>Training
-Initial setup creates a bot with no training data, and you'll need to train your bot for conversation. Below example has a simple training transcript. For more details refer to wiki (TBD).
+Initial setup creates a bot with no training data, and you'll need to train your bot for conversation. Below example has a simple training transcript. For more details refer to [wiki](https://github.com/dobby-spark/dobby-core/wiki/Training-Commands).
 ```
 You 10:00 PM
 hi
