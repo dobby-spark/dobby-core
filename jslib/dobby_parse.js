@@ -475,7 +475,7 @@ function learnLogic(botId, context, cb) {
       var msg = action.match(learnLogicCmdOutputMsgRe);
       if (next) {
         console.log('adding transition action:', next);
-        var transition = next[0].replace(/\s(is|as)/, '').split(' ');
+        var transition = next[0].replace(/\s(is|as)\s/, ' ').split(' ');
         (transition.length == 2) && (output[transition[0].trim().toLowerCase()] =  transition[1].trim().toLowerCase());
       } else if (msg) {
         // this is an intent condition
