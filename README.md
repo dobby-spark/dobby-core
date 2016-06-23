@@ -84,7 +84,7 @@ Chatbot: Mr. Dobby Spark listening on channel: <channel-name>
 ### <a name="conversation"></a>Conversation
 You'll converse with your bot started above using spark client, by sending a message to your bot from the room where bot was [added as above](#invite_bot).
 
-You could have the bot invited to a multi party room, however bot will track conversation with each person independently. In a multi-party room (i.e. not 1 on 1 rooms), bot will be a silent listener, unless directly engaged in a conversation using a sentance which starts with "/dobby " prefix.
+You could have the bot invited to a multi party room, however bot will track conversation with each person independently. In a multi-party room (i.e. not 1 on 1 rooms), bot will be a silent listener, unless directly engaged in a conversation using a sentence which starts with "/dobby " prefix. While in an active conversation, trigger word is not needed.
 
 In a direct (1 on 1) room, you do not require any "trigger" word for bot to listen on, its listening on each and every message sent to the room and will respond to each message.
 
