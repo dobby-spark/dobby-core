@@ -50,9 +50,12 @@ Create a new Spark conversation using your own spark account and invite the bot'
 ### <a name="relay_channel"></a>3. Pick a relay channel
 This application works with a (very simple) spark relay service, that acts as buffer queue for bots deployed in the corporate network. This service was implemented because bots inside corporate network cannot be reached by the spark webhook notifications. To work with this relay service, you need to pick a unique channel name. Suggest using a unique channel name (e.g. a random string) to avoid collisons.
 
+> Please note, channel name is specific to your bot, and same channel name should be used for all different rooms where bot is invited when registering webhooks.
+
 ### <a name="register_webhook"></a>4. Register a webhook
 Use the Cisco Spark Developer portal to register a webhook for your bot's channel as following:
 * register a webhook target URL `https://spark-relay.appspot.com/v1/spark/<channel-name>` for the room you've invite your bot into
+* if you have invited bot to multiple rooms, then need to add webhook for each of the room, however channel name stays the same
 * send a message to the room after above webhook has been registered
 * perform an HTTP get from URL `https://spark-relay.appspot.com/v1/poll/<channel-name>` to verify that spark notification is recieved 
 
