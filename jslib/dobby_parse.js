@@ -448,19 +448,19 @@ function learnLogic(botId, context, cb) {
       if (condition.indexOf('topic ') > -1) {
         // this is a topic condition
         console.log('adding condition:', condition);
-        input.topic = condition.split(' is ')[1];
+        input.topic = condition.split(' is ')[1].toLowerCase();
       } else if (condition.indexOf('intent ') > -1) {
         // this is an intent condition
         console.log('adding condition:', condition);
-        input.intent = condition.split(' is ')[1];
+        input.intent = condition.split(' is ')[1].toLowerCase();
       } else if (condition.indexOf('state ') > -1) {
         // this is current state condition
         console.log('adding condition:', condition);
-        input.state = condition.split(' is ')[1];
+        input.state = condition.split(' is ')[1].toLowerCase();
       } else if (condition.indexOf('input ') > -1) {
         // this is an specified input condition
         console.log('adding condition:', condition);
-        input.input = condition.split(' is ')[1];
+        input.input = condition.split(' is ')[1].toLowerCase();
       } else {
         isValid = false;
         console.log('unsupported condition:', condition);
