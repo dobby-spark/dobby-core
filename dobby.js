@@ -17,8 +17,8 @@ const sparkToken = process.argv[3];
 const sessions = {};
 const isDebug = (process.argv[4] && process.argv[4].toLowerCase() === '-debug');
 
-const findOrCreateSession = (data) => {
-  let sessionId;
+const findOrCreateSession = (data, cb) => {
+  var sessionId;
   // Let's see if we already have a session for the roomId
   Object.keys(sessions).forEach(k => {
     if (sessions[k].roomId === data.roomId && sessions[k].personEmail === data.personEmail) {
@@ -28,11 +28,31 @@ const findOrCreateSession = (data) => {
   });
   if (!sessionId) {
     // No session found for roomId, let's create a new one
-    sessionId = new Date().toISOString();
-    sessions[sessionId] = { roomId: data.roomId, personEmail: data.personEmail, context: {botId: '111'} };
-    console.log("created new session:", sessions[sessionId]);
+    // first find out room type and see if this is multi party or simple room
+    dobby_spark.getRoomInfo(sparkToken, data.roomId, (room) => {
+      sessionId = null;
+      if (!room) {
+        console.log("could not find room details for " + data.roomId);
+      } else {
+        if (room.type == 'direct') {
+          // for direct / 1 on 1 rooms we always respond
+          sessionId = new Date().toISOString();
+          sessions[sessionId] = { roomId: data.roomId, personEmail: data.personEmail, context: {botId: '111'} };
+          console.log("created new session:", sessions[sessionId]);
+        } else {
+          // for non direct rooms, we only create new session for activation command
+          if (data.text.match(/^(\/|#)dobby /)) {
+            sessionId = new Date().toISOString();
+            sessions[sessionId] = { roomId: data.roomId, personEmail: data.personEmail, context: {botId: '111'} };
+            console.log("created new session:", sessions[sessionId]);
+          }
+        }
+      }
+      cb(sessionId);
+    });
+  } else {
+    cb(sessionId);
   }
-  return sessionId;
 };
 
 const mergeContext = (sessionId, context) => {
@@ -274,37 +294,39 @@ function processSparkMessage(err, d) {
   if (d) {
     // console.log("got message:", d);
     var data = JSON.parse(d);
-    const sessionId = findOrCreateSession(data);
-    try {
-      dobby_bot.runActions(
-        actions,
-        sessionId, // the user's current session
-        data['text'], // the user's message 
-        // sessions[sessionId].context, // the user's current session state
-        JSON.parse(JSON.stringify(sessions[sessionId].context)), // the user's current session state
-        (error, context) => {
-          if (error) {
-            console.log('Oops! Got an error from Wit:', error);
-          } else {
-            // Our bot did everything it has to do.
-            // Now it's waiting for further messages to proceed.
-            // console.log('Waiting for further messages.');
+    findOrCreateSession(data, (sessionId) => {
+      if (!sessionId) return;
+      try {
+        dobby_bot.runActions(
+          actions,
+          sessionId, // the user's current session
+          data['text'], // the user's message 
+          // sessions[sessionId].context, // the user's current session state
+          JSON.parse(JSON.stringify(sessions[sessionId].context)), // the user's current session state
+          (error, context) => {
+            if (error) {
+              console.log('Oops! Got an error from Wit:', error);
+            } else {
+              // Our bot did everything it has to do.
+              // Now it's waiting for further messages to proceed.
+              // console.log('Waiting for further messages.');
+            }
           }
-        }
-      );
-    } catch (e) {
-      console.log("parser error:", e);
-      dobby_spark.sendMessage(sparkToken, data.roomId, "could not parse response, please wake up Philip!", (err, data) => {
-        if (err) {
-          console.log(
-            'Oops! An error occurred while forwarding the response to',
-            data.roomId,
-            ':',
-            err
-          );
-        }
-      });
-    }
+        );
+      } catch (e) {
+        console.log("parser error:", e);
+        dobby_spark.sendMessage(sparkToken, data.roomId, "could not parse response, please wake up Philip!", (err, data) => {
+          if (err) {
+            console.log(
+              'Oops! An error occurred while forwarding the response to',
+              data.roomId,
+              ':',
+              err
+            );
+          }
+        });
+      }      
+    });
   }
 }
 
