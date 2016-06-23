@@ -45,7 +45,7 @@ It is advisable that you use a new/unique account for your bot, that it can be e
 1. log on [https://developer.ciscospark.com] to obtain token for your bot's account
  
 ### <a name="invite_bot"></a>2. Invite Bot to a room
-Create a new Spark conversation using your own spark account and invite the bot's account to that room.
+Create a new Spark conversation using your own spark account and invite the bot's account to that room. You can invite bot to multiple different rooms, however need to make sure that each of that room has a webhook registered as mentioned [below](#register_webhook).
 
 ### <a name="relay_channel"></a>3. Pick a relay channel
 This application works with a (very simple) spark relay service, that acts as buffer queue for bots deployed in the corporate network. This service was implemented because bots inside corporate network cannot be reached by the spark webhook notifications. To work with this relay service, you need to pick a unique channel name. Suggest using a unique channel name (e.g. a random string) to avoid collisons.
