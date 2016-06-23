@@ -15,7 +15,7 @@ A bot engine platform to build conversational bots on top of Cisco Spark Message
  1. [Training](#training)
 
 ## <a name="whats_new"></a>What's New
-This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model we have developed to create bots that can engage in a conversation exchange on different topics with varying degree of context and depth. More details about this training model are described [here](https://github.com/dobby-spark/dobby-core/wiki/Gradient-Scale-Model). Our goal for this conversation bot platform is that one can start with intial deployment mentioned here, and then any training for the bot should be using conversation methods only, and should not require writing any code or web UI. Eventually we want the bot to be trained using natural language interaction, e.g. using [Parsey McParseface](https://research.googleblog.com/2016/05/announcing-syntaxnet-worlds-most.html).
+This is the initial release of Dobby -- a conversation bot building platform on top of Cisco Spark. Current implementation has a proof of concept for a bot training model we have developed to create bots that can engage in a conversation exchange on different topics with varying degree of context and depth. More details about this training model are described [here](https://github.com/dobby-spark/dobby-core/wiki/Gradient-Scale-Model). Our goal for this conversation bot platform is that one should not require writing any code or learn a new web UI model to create a bot. With Dobby, one starts with deployment of the bot engine platform as mentioned here, and then any training for the bot uses conversation with the bot itself. Eventually we want the bot to be trained using natural language interaction, e.g. using [Parsey McParseface](https://research.googleblog.com/2016/05/announcing-syntaxnet-worlds-most.html).
 
 ## <a name="pre_req"></a>Pre-requisites
 Following are required for this application to be used:
@@ -81,8 +81,12 @@ Chatbot: Mr. Dobby Spark listening on channel: <channel-name>
 ### <a name="conversation"></a>Conversation
 You'll converse with your bot started above using spark client, by sending a message to your bot from the room where bot was [added as above](#invite_bot).
 
+You could have the bot invited to a multi party room, however bot will track conversation with each person independently. You do not require any "trigger" word for bot to listen on, its listening on each and every message sent to the room and will respond to each message by each person.
+
+There is a special trigger word "#dobby" that is used to execute special commands, for training, or for reseting an active conversation. More details about these commands can be found [here](https://github.com/dobby-spark/dobby-core/wiki/Training-Commands).
+
 ### <a name="training"></a>Training
-Initial setup creates a bot with no training data, and you'll need to train your bot for conversation. Below example has a simple training transcript. For more details refer to [wiki](https://github.com/dobby-spark/dobby-core/wiki/Training-Commands).
+Initial setup creates a bot with no training data, and you'll need to train your bot for conversation. Below example has a simple training transcript. For more details refer to [training model](https://github.com/dobby-spark/dobby-core/wiki/Gradient-Scale-Model) and [training command](https://github.com/dobby-spark/dobby-core/wiki/Training-Commands) wikis.
 ```
 You 10:00 PM
 hi
