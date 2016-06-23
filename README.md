@@ -34,7 +34,7 @@ To use this application, you'll need to install and deploy the bot engine platfo
 1. install node.js dependencies: `cd dobby-core; npm install`
 1. setup environment variable *CONTACT_POINTS* to point to your cassandra host, e.g. `export CONTACT_POINTS=localhost`
 1. (optional) setup environment variable *CONTACT_PORT* to point to your cassandra port, e.g. `export CONTACT_PORT=9042`
-1. create and populate cassandra DB by runnin setup: `./setup.sh`
+1. create and populate cassandra DB by running setup: `./setup.sh`
 
 ## <a name="setup"></a>Setup
 
