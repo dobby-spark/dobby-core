@@ -2,7 +2,6 @@
 'use strict';
 
 const request = require('request');
-const sleep = require('sleep');
 const dobby_spark = require('./dobby_spark');
 
 module.exports = {
@@ -54,6 +53,7 @@ function poll(token, myEmail, err, d, processSparkMessageCB) {
     }
   }
   // sleep
-  sleep.sleep(1);
-  getMessages(token, myChannel, myEmail, processSparkMessageCB);
+  setTimeout(() => {
+    getMessages(token, myChannel, myEmail, processSparkMessageCB);
+  }, 1000);
 };
