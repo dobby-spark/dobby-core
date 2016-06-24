@@ -18,7 +18,7 @@ module.exports = {
 };
 
 if (!process.env.CONTACT_POINTS) {
-  console.log('cassandra CONTACT_POONTS not defined in environment');
+  console.log('cassandra CONTACT_POINTS not defined in environment');
   process.exit(1);
 }
 
