@@ -9,7 +9,7 @@ if [[ "$CONTACT_POINTS" == "" ]] ; then
 	exit 1
 fi
 
-$CQLSH -f cql/populateKeyspace.cql $CONTACT_POINTS $CANTACT_PORT; rc=$?
+$CQLSH -f cql/populateKeyspace.cql $CONTACT_POINTS $CONTACT_PORT; rc=$?
 
 if [ $rc == 0 ] ; then
 	echo "keyspace populated successfully"
