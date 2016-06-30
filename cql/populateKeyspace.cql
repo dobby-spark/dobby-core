@@ -26,8 +26,8 @@ COPY dobby.botvocab FROM 'cql/dobby_vocab.csv';
 
 CREATE TABLE IF NOT EXISTS dobby.botvocabtypes (
     botid text PRIMARY KEY,
-    input list<text>,
-    intent list<text>,
-    topic list<text>
+    input set<text>,
+    intent set<text>,
+    topic set<text>
 );
 
